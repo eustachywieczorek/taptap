@@ -26,6 +26,7 @@ namespace TapTapApplication
 		
 		public static void UpdateIdValues()
 		{
+			global::Auth0.SDK.Resource.String.library_name = global::TapTapApplication.Resource.String.library_name;
 		}
 		
 		public partial class Animation
@@ -1411,7 +1412,13 @@ namespace TapTapApplication
 			public const int abc_textfield_search_material = 2130837572;
 			
 			// aapt resource value: 0x7f020045
-			public const int notification_template_icon_bg = 2130837573;
+			public const int arrow_down = 2130837573;
+			
+			// aapt resource value: 0x7f020046
+			public const int arrow_up = 2130837574;
+			
+			// aapt resource value: 0x7f020047
+			public const int notification_template_icon_bg = 2130837575;
 			
 			static Drawable()
 			{
@@ -1480,11 +1487,17 @@ namespace TapTapApplication
 			// aapt resource value: 0x7f0c001b
 			public const int always = 2131492891;
 			
+			// aapt resource value: 0x7f0c0054
+			public const int arrow = 2131492948;
+			
 			// aapt resource value: 0x7f0c0018
 			public const int beginning = 2131492888;
 			
 			// aapt resource value: 0x7f0c0057
-			public const int btnPay = 2131492951;
+			public const int btnLogin = 2131492951;
+			
+			// aapt resource value: 0x7f0c0068
+			public const int btnPay = 2131492968;
 			
 			// aapt resource value: 0x7f0c002b
 			public const int buttonPanel = 2131492907;
@@ -1570,14 +1583,14 @@ namespace TapTapApplication
 			// aapt resource value: 0x7f0c0028
 			public const int list_item = 2131492904;
 			
-			// aapt resource value: 0x7f0c0054
-			public const int lvCafe = 2131492948;
+			// aapt resource value: 0x7f0c0065
+			public const int lvCafe = 2131492965;
 			
-			// aapt resource value: 0x7f0c0055
-			public const int lvCoffee = 2131492949;
+			// aapt resource value: 0x7f0c0066
+			public const int lvCoffee = 2131492966;
 			
-			// aapt resource value: 0x7f0c0056
-			public const int lvSize = 2131492950;
+			// aapt resource value: 0x7f0c0067
+			public const int lvSize = 2131492967;
 			
 			// aapt resource value: 0x7f0c005b
 			public const int media_actions = 2131492955;
@@ -1716,6 +1729,12 @@ namespace TapTapApplication
 			
 			// aapt resource value: 0x7f0c0053
 			public const int txtListHeader = 2131492947;
+			
+			// aapt resource value: 0x7f0c0056
+			public const int txtPassword = 2131492950;
+			
+			// aapt resource value: 0x7f0c0055
+			public const int txtUsername = 2131492949;
 			
 			// aapt resource value: 0x7f0c0008
 			public const int up = 2131492872;
@@ -1879,16 +1898,19 @@ namespace TapTapApplication
 			public const int notification_template_part_time = 2130968611;
 			
 			// aapt resource value: 0x7f040024
-			public const int select_dialog_item_material = 2130968612;
+			public const int OrderActivity = 2130968612;
 			
 			// aapt resource value: 0x7f040025
-			public const int select_dialog_multichoice_material = 2130968613;
+			public const int select_dialog_item_material = 2130968613;
 			
 			// aapt resource value: 0x7f040026
-			public const int select_dialog_singlechoice_material = 2130968614;
+			public const int select_dialog_multichoice_material = 2130968614;
 			
 			// aapt resource value: 0x7f040027
-			public const int support_simple_spinner_dropdown_item = 2130968615;
+			public const int select_dialog_singlechoice_material = 2130968615;
+			
+			// aapt resource value: 0x7f040028
+			public const int support_simple_spinner_dropdown_item = 2130968616;
 			
 			static Layout()
 			{
@@ -1976,11 +1998,14 @@ namespace TapTapApplication
 			// aapt resource value: 0x7f060012
 			public const int abc_toolbar_collapse_description = 2131099666;
 			
+			// aapt resource value: 0x7f060016
+			public const int app_name = 2131099670;
+			
 			// aapt resource value: 0x7f060015
-			public const int app_name = 2131099669;
+			public const int hello = 2131099669;
 			
 			// aapt resource value: 0x7f060014
-			public const int hello = 2131099668;
+			public const int library_name = 2131099668;
 			
 			// aapt resource value: 0x7f060013
 			public const int status_bar_notification_info_overflow = 2131099667;

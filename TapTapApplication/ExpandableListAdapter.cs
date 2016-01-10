@@ -30,13 +30,16 @@ namespace TapTapApplication
 				group = _context.LayoutInflater.Inflate (Resource.Layout.ExpandableListView, null);
 			}
 
-			if (isExpanded) {
-				
-				group.FindViewById<TextView> (Resource.Id.txtListHeader).Text = ListName;
-			} else {
-				
 
+
+			if (isExpanded) {
+				group.FindViewById<ImageView> (Resource.Id.arrow).SetImageResource(Resource.Drawable.arrow_up);
+
+			} else {
+				group.FindViewById<ImageView> (Resource.Id.arrow).SetImageResource(Resource.Drawable.arrow_down);
 			}
+
+			group.FindViewById<TextView> (Resource.Id.txtListHeader).Text = ListName;
 
 			return group;
 		}
