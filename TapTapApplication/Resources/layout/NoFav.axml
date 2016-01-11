@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="MyApp"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@layout/action_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <!-- Left Navigation Drawer -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/linPushCustomer">
+            <TextView
+                android:text="Coffee is just a TapTap away."
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView1"
+                android:textSize="25dp"
+                android:gravity="center"
+                android:layout_marginTop="30dp" />
+            <ImageView
+                android:src="@android:drawable/ic_menu_gallery"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:id="@+id/imageView1"
+                android:layout_marginTop="90dp"
+                android:layout_gravity="center_horizontal" />
+            <TextView
+                android:text="Howdy!"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"
+                android:gravity="center"
+                android:layout_marginRight="0.0dp"
+                android:layout_marginLeft="0.0dp"
+                android:textSize="30dp"
+                android:layout_marginTop="10dp" />
+            <TextView
+                android:text="Looks like you have not created a favourite yet."
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView3"
+                android:textSize="20dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:layout_marginTop="25dp" />
+            <Button
+                android:text="Craft one now"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/button1"
+                android:layout_marginTop="75dp"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/left_drawer"
+            android:layout_width="240dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:divider="#A1A1A1"
+            android:dividerHeight="1dp"
+            android:background="#E3F2FD"
+            android:orientation="vertical"
+            android:isScrollContainer="true">
+            <ListView
+                android:id="@+id/left_drawer_controls"
+                android:layout_width="240dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:choiceMode="singleChoice"
+                android:divider="#A1A1A1"
+                android:dividerHeight="1dp"
+                android:background="#E3F2FD"
+                android:orientation="vertical" />
+        </LinearLayout>
+    <!-- Right Navigation Drawer -->
+        <LinearLayout
+            android:id="@+id/right_drawer"
+            android:layout_width="240dp"
+            android:layout_height="fill_parent"
+            android:layout_gravity="right"
+            android:divider="#A1A1A1"
+            android:background="#E3F2FD"
+            android:orientation="vertical"
+            android:isScrollContainer="true">
+            <ImageView
+                android:id="@+id/imageBruh"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/arrow_up"
+                android:scaleType="fitXY"
+                android:layout_marginBottom="40dp" />
+            <ListView
+                android:id="@+id/cafe_list"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:choiceMode="singleChoice"
+                android:divider="#A1A1A1"
+                android:dividerHeight="1dp"
+                android:background="#E3F2FD"
+                android:orientation="vertical" />
+            <ListView
+                android:id="@+id/coffee_list"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:choiceMode="singleChoice"
+                android:divider="#A1A1A1"
+                android:dividerHeight="1dp"
+                android:background="#E3F2FD"
+                android:orientation="vertical" />
+            <ListView
+                android:id="@+id/size_list"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:choiceMode="singleChoice"
+                android:divider="#A1A1A1"
+                android:dividerHeight="1dp"
+                android:background="#E3F2FD"
+                android:orientation="vertical" />
+            <RelativeLayout
+                android:orientation="vertical"
+                android:id="@+id/footer"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+                <Button
+                    android:id="@+id/btnGetMoreResults"
+                    android:layout_height="50dp"
+                    android:layout_width="match_parent"
+                    android:text="ORDER NOW"
+                    android:gravity="center"
+                    android:background="#ffd500"
+                    android:textColor="#FFFFFF"
+                    android:layout_alignParentBottom="true" />
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v4.widget.DrawerLayout>
+</LinearLayout>

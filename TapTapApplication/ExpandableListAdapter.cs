@@ -29,9 +29,7 @@ namespace TapTapApplication
 			if (group == null) {
 				group = _context.LayoutInflater.Inflate (Resource.Layout.ExpandableListView, null);
 			}
-
-
-
+				
 			if (isExpanded) {
 				group.FindViewById<ImageView> (Resource.Id.arrow).SetImageResource(Resource.Drawable.arrow_up);
 
@@ -89,7 +87,7 @@ namespace TapTapApplication
 
 		public override bool IsChildSelectable (int groupPosition, int childPosition)
 		{
-			throw new NotImplementedException ();
+			return true;
 		}
 
 		public override bool HasStableIds {

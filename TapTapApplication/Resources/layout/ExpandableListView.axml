@@ -6,16 +6,19 @@
     android:layout_height="wrap_content"
     android:id="@+id/listView1"
     android:orientation="horizontal"
-    android:weightSum="100">
+    android:weightSum="100"
+    android:background="#E0E0E0">
     <TextView
-        android:id="@+id/txtListHeader"
+        android:text="Text"
         android:textSize="20dp"
-        android:minWidth="25px"
-        android:minHeight="25px"
-        android:layout_width="0dp"
-        android:layout_weight="90"
-        android:layout_height="match_parent"
-        android:background="@android:color/darker_gray" />
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/txtListHeader"
+        android:focusable="false"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:focusableInTouchMode="false" />
     <ImageView
         android:id="@+id/arrow"
         android:layout_width="30dp"
