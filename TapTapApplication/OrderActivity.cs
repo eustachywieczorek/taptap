@@ -7,195 +7,131 @@ using System.Collections.Generic;
 using FireSharp;
 using FireSharp.Config;
 using FireSharp.Response;
-
+using System;
 using Newtonsoft.Json.Linq;
 using Android.Content;
 
 using Android.Views;
-using Android.Widget;
 using Android.Support.V4.Widget;
 using SupportToolbar = Android.Support.V7.Widget.Toolbar;
 using Android.Support.V7.App;
 
-using TapTap;
+using TapTapApplication;
+using Android.Graphics.Drawables;
 
 namespace TapTapApplication
 {
 	[Activity (Label = "OrderActivity", Theme="@style/MyTheme")]
-	public class OrderActivity : ActionBarActivity
-	{
-		LinearLayout mLeftDrawer, body;
-		DrawerLayout mDrawerLayout;
-		SupportToolbar supportToolbar;
-		MyActionBarDrawerToggle mToggle;
-		List<string> cafes, coffees, sizes;
+	public class OrderActivity : ActionBarActivity {
+		//Data variables
 		FirebaseClient fbClient;
+		IFirebaseConfig fbConfig;
+		FirebaseResponse response;
 
-		ListView leftDrawerControls;
-		List<string> controls;
-		ExpandableListView coffeeList, cafeList, sizeList;
-		Button payButton;
+		//Universal variables
+		LayoutInflater inflater;
+		LinearLayout testLayout;
+		View addedLayout;
+
+		//Choosing cafe
+		ImageView imgTest;
+
+		//Choosing coffee
+		List<string> coffee, size, milk;
+		ExpandableListView coffeeLv, sizeLv, milkLv;
 
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
 			Xamarin.Insights.Initialize (XamarinInsights.ApiKey, this);
 			base.OnCreate (savedInstanceState);
-			// Set our view from the "main" layout resource
-			SetContentView (Resource.Layout.OrderActivity);
-			// Get our button from the layout resource,
-			// and attach an event to it
-
-			controls = SetControls ();
-
-			supportToolbar = FindViewById<SupportToolbar> (Resource.Layout.action_menu);
-			mDrawerLayout = FindViewById<DrawerLayout> (Resource.Id.drawer_layout);
-			mLeftDrawer = FindViewById<LinearLayout> (Resource.Id.left_drawer);
-			mLeftDrawer.Tag = 0;
-
-			leftDrawerControls = FindViewById<ListView> (Resource.Id.left_drawer_controls);
-			body = FindViewById<LinearLayout> (Resource.Id.linPushCustomer);
-			leftDrawerControls.Adapter = new LeftDrawerAdapter(this, controls);
-
-
-
-
-
-			SetSupportActionBar (supportToolbar);
-			SupportActionBar.SetHomeButtonEnabled(true);
-			SupportActionBar.SetDisplayHomeAsUpEnabled (true);
-			SupportActionBar.SetDisplayShowTitleEnabled (true);
-
-			mToggle = new MyActionBarDrawerToggle (this, mDrawerLayout, Resource.String.openDrawer, 
-				Resource.String.closeDrawer);
-			mToggle.SyncState();
-
-			fbClient = new FirebaseClient (new FirebaseConfig {
+			SetContentView (Resource.Layout.Order);
+		
+			fbConfig = new FirebaseConfig {
 				AuthSecret = "FO85aksCBndB5fXAykNFQstlLqqYrHsiq4myZTQW", 
 				BasePath = "https://scorching-heat-9815.firebaseio.com/"
-			});
+			};
 
-			FirebaseResponse fbResponseCoffee = fbClient.Get ("coffee/");
-			JObject coffeeObjs = fbResponseCoffee.ResultAs<JObject> ();
+			fbClient = new FirebaseClient (fbConfig);
 
-			FirebaseResponse fbResponseCafe = fbClient.Get ("cafes/");
-			JObject cafeObjs = fbResponseCafe.ResultAs<JObject> ();
+			testLayout = FindViewById<LinearLayout> (Resource.Id.linAction);
+			addedLayout = LayoutInflater.Inflate(Resource.Layout.ChooseCafe, null);  
+			testLayout.AddView (addedLayout);
 
-			cafes = new List<string> ();
-			coffees = new List<string> ();
-			sizes = new List<string> ();
+			imgTest = FindViewById<ImageView> (Resource.Id.imgRekty);
+			imgTest.Click += delegate {
+				ChooseCoffee();
+
+				ExpandableListAdapter sizeAdapter = new ExpandableListAdapter (this, size, "Size");
+				ExpandableListAdapter milkAdapter = new ExpandableListAdapter (this, milk, "Milk");
+				ExpandableListAdapter coffeeAdapter = new ExpandableListAdapter (this, coffee, "Coffee");
 
 
+			};
+
+
+		}
+			
+
+		public void ChooseCoffee() {
+			testLayout.RemoveView (addedLayout);
+			addedLayout = LayoutInflater.Inflate(Resource.Layout.ChooseCoffee, null);
+			testLayout.AddView (addedLayout);
+
+
+			coffeeLv = FindViewById<ExpandableListView> (Resource.Id.lvCoffee);
+			sizeLv = FindViewById<ExpandableListView> (Resource.Id.lvSize);
+			milkLv = FindViewById<ExpandableListView> (Resource.Id.lvMilk);
+
+			size = GetSizes();
+			milk = GetMilks();
+			coffee = GetCoffees(coffee);
+
+			coffeeLv.SetAdapter(new ExpandableListAdapter(this, coffee, "Coffee"));
+			sizeLv.SetAdapter(new ExpandableListAdapter (this, size, "Size"));
+			milkLv.SetAdapter(new ExpandableListAdapter (this, milk, "Milk"));
+
+			coffeeLv.ExpandGroup (0);
+
+
+
+
+
+			//Drawable indicator = Drawable.CreateFromPath("@drawable/logo");
+			//int indicatorWidth = indicator.Bounds.Width();
+
+			//coffeeLv.SetIndicatorBoundsRelative(coffeeLv.Width - indicatorWidth, coffeeLv.Width);
+			//sizeLv.SetIndicatorBoundsRelative(sizeLv.Width - indicatorWidth, sizeLv.Width);
+			//milkLv.SetIndicatorBoundsRelative(milkLv.Width - indicatorWidth, milkLv.Width);
+		}
+			
+		public List<string> GetSizes() {
+			//Might need firebase call at one stage
+			List<string> sizes = new List<string> ();
 			sizes.Add ("Small");
 			sizes.Add ("Medium");
 			sizes.Add ("Large");
+			return sizes;
+		}
 
-			//property.Name finds each coffee type
-			foreach (JProperty property in coffeeObjs.Properties()) {
-				coffees.Add (property.Name);
+		public List<string> GetMilks() {
+			List<string> milks = new List<string> ();
+			milks.Add ("Skim");
+			milks.Add ("Soy");
+			milks.Add ("Full Cream");
+			milks.Add ("Another type");
+			return milks;
+		}
+
+		public List<string> GetCoffees(List<string> coffee) {
+			FirebaseResponse coffeeResponse = fbClient.GetAsync ("coffee/").Result;
+			JObject coffeeJson = coffeeResponse.ResultAs<JObject> ();
+			coffee = new List<string> ();
+
+			foreach (JProperty property in coffeeJson.Properties()) {
+				coffee.Add(property.Name);
 			}
 
-			foreach (JProperty property in cafeObjs.Properties()) {
-				JToken hey = property.Value ["name"];
-				cafes.Add (hey.ToString ());
-			}
-
-
-
-			payButton = FindViewById<Button> (Resource.Id.btnPay);
-
-			payButton.Click += delegate {
-				StartActivity(typeof(PayActivity));
-			};
-
-			coffeeList = FindViewById<ExpandableListView> (Resource.Id.lvCoffee);
-			coffeeList.SetAdapter(new ExpandableListAdapter(this, coffees, "Coffee"));
-			cafeList = FindViewById<ExpandableListView>(Resource.Id.lvCafe);
-			cafeList.SetAdapter (new ExpandableListAdapter (this, cafes, "Cafe"));
-			sizeList = FindViewById<ExpandableListView> (Resource.Id.lvSize);
-			sizeList.SetAdapter(new ExpandableListAdapter(this, sizes, "Size"));
-
-			coffeeList.ExpandGroup (0);
-			cafeList.ExpandGroup (0);
-			sizeList.ExpandGroup (0);
-		
-			/* This should worK??? 
-			 * coffeeList.SetScrollContainer (false);
-			cafeList.SetScrollContainer (false);
-			sizeList.SetScrollContainer (false);*/
-
-			coffeeList.ItemClick += List_ItemClick;
-			cafeList.ItemClick += List_ItemClick;
-			sizeList.ItemClick += List_ItemClick;
-		}
-
-		public List<string> SetControls() {
-			List<string> controls = new List<string> ();
-			controls.Add ("ACTIVE ORDERS");
-			controls.Add ("PAST ORDERS");
-			controls.Add ("LOYALTY TRACKING");
-			controls.Add ("LOGOUT");
-
-			return controls;
-		}
-
-		public void List_ItemClick(object sender, AdapterView.ItemClickEventArgs e) {
-
-			ExpandableListView t = (ExpandableListView)e.View;
-				ExpandableListAdapter f = (ExpandableListAdapter)t.Adapter;
-				string hey = string.Concat (f.ListName, ": ", f.DataList [e.Position]);
-
-		}
-
-		public override bool OnOptionsItemSelected (IMenuItem item) {
-			switch (item.ItemId) {
-			case Android.Resource.Id.Home:
-				if (mDrawerLayout.IsDrawerOpen (mLeftDrawer)) {
-					mDrawerLayout.CloseDrawer (mLeftDrawer);
-				} else {
-					mDrawerLayout.OpenDrawer (mLeftDrawer);
-				}
-				return true;
-			case Resource.Id.order:
-				StartActivity (typeof(OrderActivity));
-				return true;
-			default:
-				return base.OnOptionsItemSelected (item);
-			}
-		}
-
-		protected override void OnSaveInstanceState (Bundle outState)
-		{
-			if (mDrawerLayout.IsDrawerOpen ((int)GravityFlags.Left)) {
-				outState.PutString ("DrawerState", "Opened");
-			} else {
-				outState.PutString ("DrawerState", "Closed");
-			}
-
-			base.OnSaveInstanceState (outState);
-		}
-
-		protected override void OnPostResume ()
-		{
-			base.OnPostResume ();
-			mToggle.SyncState ();
-		}
-
-		public override bool OnCreateOptionsMenu (IMenu menu)
-		{
-			MenuInflater.Inflate (Resource.Layout.action_menu, menu);
-			return base.OnCreateOptionsMenu (menu);
-		}
-
-		protected override void OnPostCreate (Bundle savedInstanceState)
-		{
-			base.OnPostCreate (savedInstanceState);
-			mToggle.SyncState();
-		}
-
-		public override void OnConfigurationChanged (Android.Content.Res.Configuration newConfig)
-		{
-			base.OnConfigurationChanged (newConfig);
-			mToggle.OnConfigurationChanged(newConfig);
+			return coffee;
 		}
 	}
 }

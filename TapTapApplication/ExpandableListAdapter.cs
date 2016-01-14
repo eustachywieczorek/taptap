@@ -30,12 +30,12 @@ namespace TapTapApplication
 				group = _context.LayoutInflater.Inflate (Resource.Layout.ExpandableListView, null);
 			}
 				
-			if (isExpanded) {
+			/*if (isExpanded) {
 				group.FindViewById<ImageView> (Resource.Id.arrow).SetImageResource(Resource.Drawable.arrow_up);
 
 			} else {
 				group.FindViewById<ImageView> (Resource.Id.arrow).SetImageResource(Resource.Drawable.arrow_down);
-			}
+			}*/
 
 			group.FindViewById<TextView> (Resource.Id.txtListHeader).Text = ListName;
 
@@ -49,12 +49,21 @@ namespace TapTapApplication
 				row = _context.LayoutInflater.Inflate (Resource.Layout.ExpandableListItem, null);
 			}
 
-			LinearLayout cover = _context.FindViewById<LinearLayout> (Resource.Id.linItemContainer);
+			row.Focusable = false;
+			row.FocusableInTouchMode = false;
+			row.Clickable = true;
 
-			row.FindViewById<TextView> (Resource.Id.txtItemContent).Text = DataList [childPosition];
+			TextView t = row.FindViewById<TextView> (Resource.Id.txtItemContent);
+			t.Text = DataList [childPosition];
+
 
 			return row;
 			//throw new NotImplementedException ();
+		}
+
+		public override Java.Lang.Object GetChild (int groupPosition, int childPosition)
+		{
+			throw new NotImplementedException ();
 		}
 
 		public override int GetChildrenCount (int groupPosition) {
@@ -65,14 +74,13 @@ namespace TapTapApplication
 			get { return 1; } //Don't know what this is...
 		}
 
-		public override Java.Lang.Object GetChild (int groupPosition, int childPosition)
-		{
-			throw new NotImplementedException ();
-		}
+
 
 		public override long GetChildId (int groupPosition, int childPosition)
 		{
-			return childPosition;
+			long cool = long.MinValue;
+			return cool;
+			//return childPosition;
 		}
 
 		public override Java.Lang.Object GetGroup (int groupPosition)
@@ -93,6 +101,7 @@ namespace TapTapApplication
 		public override bool HasStableIds {
 			get { return true; }
 		}
+
 	}
 }
 

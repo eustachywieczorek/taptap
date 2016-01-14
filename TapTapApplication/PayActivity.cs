@@ -31,7 +31,7 @@ namespace TapTapApplication
 			// Get our button from the layout resource,
 			// and attach an event to it
 
-			fbClient = new FirebaseClient (new FirebaseConfig {
+			/*fbClient = new FirebaseClient (new FirebaseConfig {
 				AuthSecret = "FO85aksCBndB5fXAykNFQstlLqqYrHsiq4myZTQW", 
 				BasePath = "https://scorching-heat-9815.firebaseio.com/"
 			});
@@ -72,7 +72,7 @@ namespace TapTapApplication
 			cafeList = FindViewById<ExpandableListView>(Resource.Id.lvCafe);
 			cafeList.SetAdapter (new ExpandableListAdapter (this, cafes, "Cafe"));
 			sizeList = FindViewById<ExpandableListView> (Resource.Id.lvSize);
-			sizeList.SetAdapter(new ExpandableListAdapter(this, sizes, "Size"));
+			sizeList.SetAdapter(new ExpandableListAdapter(this, sizes, "Size"));*/
 		}
 	}
 }

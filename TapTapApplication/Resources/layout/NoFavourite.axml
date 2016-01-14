@@ -3,27 +3,27 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/linPushCustomer">
+    android:id="@+id/no_favourite">
     <TextView
         android:text="Coffee is just a TapTap away."
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView1"
+        android:id="@+id/txtTitle"
         android:textSize="25dp"
         android:gravity="center"
         android:layout_marginTop="30dp" />
     <ImageView
-        android:src="@android:drawable/ic_menu_gallery"
+        android:src="@drawable/logo"
         android:layout_width="110dp"
         android:layout_height="110dp"
-        android:id="@+id/imageView1"
+        android:id="@+id/imgLogo"
         android:layout_marginTop="90dp"
         android:layout_gravity="center_horizontal" />
     <TextView
         android:text="Howdy!"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView2"
+        android:id="@+id/txtHowdy"
         android:gravity="center"
         android:layout_marginRight="0.0dp"
         android:layout_marginLeft="0.0dp"
@@ -33,7 +33,7 @@
         android:text="Looks like you have not created a favourite yet."
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:id="@+id/textView3"
+        android:id="@+id/txtChatter"
         android:textSize="20dp"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
@@ -42,7 +42,7 @@
         android:text="Craft one now"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:id="@+id/button1"
+        android:id="@+id/btnCraft"
         android:layout_marginTop="75dp"
         android:layout_gravity="center_horizontal" />
 </LinearLayout>

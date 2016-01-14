@@ -64,11 +64,11 @@ namespace TapTapApplication
 					JObject result = set.ResultAs<JObject> ();
 
 					if (result != null) {
-						change = new Intent(this, typeof(NoFavActivity));
+						change = new Intent(this, typeof(HomeActivity));
 						StartActivity(change);
 					}
 				} else {
-					change = new Intent(this, typeof(NoFavActivity));
+					change = new Intent(this, typeof(HomeActivity));
 					StartActivity(change);
 				}
 			} catch (System.AggregateException e) {

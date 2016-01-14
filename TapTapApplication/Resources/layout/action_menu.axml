@@ -6,6 +6,6 @@
         myapp:showAsAction="always"
         id="@+id/order"
         android:orderInCategory="100"
-        android:icon="@drawable/arrow_down"
+        android:icon="@drawable/new_order"
         android:id="@+id/order" />
 </menu>

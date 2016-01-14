@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="25px"
+    android:minHeight="25px"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/list_item"
+    android:orientation="vertical"
+    android:weightSum="100"
+    android:background="#FFFFFF">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="95"
+        android:background="#FFFFFF">
+        <TextView
+            android:text="Cafe"
+            android:textSize="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtItemCoffee"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:focusable="false"
+            android:textColor="#ff757575" />
+        <TextView
+            android:text="Coffee"
+            android:textSize="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:id="@+id/txtItemCafe"
+            android:focusable="false"
+            android:textColor="#ff757575" />
+        <TextView
+            android:text="Order"
+            android:textSize="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingBottom="10dp"
+            android:id="@+id/txtItemOrder"
+            android:focusable="false"
+            android:textColor="#ff757575" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:paddingTop="5dp"
+        android:layout_weight="5"
+        android:id="@+id/order_colour"
+        android:background="#00000F" />
+</LinearLayout>

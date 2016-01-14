@@ -87,7 +87,11 @@
     <Compile Include="OrderActivity.cs" />
     <Compile Include="MyActionBarDrawerToggle.cs" />
     <Compile Include="ListAdapter.cs" />
-    <Compile Include="NoFavActivity.cs" />
+    <Compile Include="ActivePastActivity.cs" />
+    <Compile Include="NavigationSupport.cs" />
+    <Compile Include="HomeActivity.cs" />
+    <Compile Include="Order.cs" />
+    <Compile Include="OrderAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -107,13 +111,18 @@
     <AndroidResource Include="Resources\layout\ExpandableListView.axml" />
     <AndroidResource Include="Resources\drawable\arrow_down.png" />
     <AndroidResource Include="Resources\drawable\arrow_up.png" />
-    <AndroidResource Include="Resources\layout\OrderActivity.axml" />
     <AndroidResource Include="Resources\drawable\logo.png" />
     <AndroidResource Include="Resources\layout\action_menu.axml" />
     <AndroidResource Include="Resources\values\Styles.xml" />
-    <AndroidResource Include="Resources\layout\NoFavourite.axml" />
-    <AndroidResource Include="Resources\layout\NoFav.axml" />
     <AndroidResource Include="Resources\layout\Home.axml" />
+    <AndroidResource Include="Resources\layout\Order.axml" />
+    <AndroidResource Include="Resources\layout\NoFavourite.axml" />
+    <AndroidResource Include="Resources\layout\ChooseCafe.axml" />
+    <AndroidResource Include="Resources\layout\ChooseCoffee.axml" />
+    <AndroidResource Include="Resources\layout\CafeListItem.axml" />
+    <AndroidResource Include="Resources\layout\ActivePast.axml" />
+    <AndroidResource Include="Resources\layout\ListItem.axml" />
+    <AndroidResource Include="Resources\drawable\new_order.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
