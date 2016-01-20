@@ -3,8 +3,16 @@
     xmlns:app="MyApp"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/linNoFav">
+    android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@layout/order_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
+<!-- Left Navigation Drawer -->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

@@ -15,7 +15,8 @@
         android:layout_height="40dp"
         android:id="@+id/txtListHeader"
         android:focusable="false"
-        android:gravity="center_vertical"
+        android:focusableInTouchMode="false"
+        android:gravity="center"
         android:paddingLeft="10dp"
         android:textColor="#ff757575" />
 </LinearLayout>

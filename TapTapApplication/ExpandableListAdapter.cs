@@ -5,87 +5,55 @@ using Android.Content;
 using Android.Views;
 using Android.Widget;
 using Android;
+using Android.Database;
+using System.Linq;
 
 namespace TapTapApplication
 {
 	public class ExpandableListAdapter: BaseExpandableListAdapter
 	{
-		private Activity _context;
+		Activity context;
+		Dictionary<string, List<string>> data;
+		List<string> dataHeaders;
 
-		public ExpandableListAdapter (Activity context, List<string> dataList, string listName)
+		public ExpandableListAdapter (Activity context, Dictionary<string, List<string>> data, List<string> headers)
 		{
-			_context = context;
-			DataList = dataList;
-			ListName = listName;
+			this.context = context;
+			this.data = data;
+			this.dataHeaders = new List<string> (this.data.Keys);
+		}
+			
+		public override Java.Lang.Object GetChild (int groupPosition, int childPosition)
+		{
+			return data[this.dataHeaders[groupPosition]][childPosition];
 		}
 
-		public List<string> DataList { get; set; }
-		public string ListName { get; set; }
-
-		public override View GetGroupView (int groupPosition, bool isExpanded, View convertView, ViewGroup parent)
+		public override long GetChildId (int groupPosition, int childPosition)
 		{
-			View group = convertView;
+			return childPosition;
+		}
 
-			if (group == null) {
-				group = _context.LayoutInflater.Inflate (Resource.Layout.ExpandableListView, null);
-			}
-				
-			/*if (isExpanded) {
-				group.FindViewById<ImageView> (Resource.Id.arrow).SetImageResource(Resource.Drawable.arrow_up);
-
-			} else {
-				group.FindViewById<ImageView> (Resource.Id.arrow).SetImageResource(Resource.Drawable.arrow_down);
-			}*/
-
-			group.FindViewById<TextView> (Resource.Id.txtListHeader).Text = ListName;
-
-			return group;
+		public override int GetChildrenCount (int groupPosition)
+		{
+			return data [this.dataHeaders [groupPosition]].Count;
 		}
 
 		public override View GetChildView (int groupPosition, int childPosition, bool isLastChild, View convertView, ViewGroup parent)
 		{
 			View row = convertView;
 			if (row == null) {
-				row = _context.LayoutInflater.Inflate (Resource.Layout.ExpandableListItem, null);
+				row = context.LayoutInflater.Inflate (Resource.Layout.ExpandableListItem, null);
 			}
 
-			row.Focusable = false;
-			row.FocusableInTouchMode = false;
-			row.Clickable = true;
-
-			TextView t = row.FindViewById<TextView> (Resource.Id.txtItemContent);
-			t.Text = DataList [childPosition];
-
+			TextView txtContent = row.FindViewById<TextView> (Resource.Id.txtItemContent);
+			txtContent.Text = data[this.dataHeaders[groupPosition]][childPosition];
 
 			return row;
-			//throw new NotImplementedException ();
-		}
-
-		public override Java.Lang.Object GetChild (int groupPosition, int childPosition)
-		{
-			throw new NotImplementedException ();
-		}
-
-		public override int GetChildrenCount (int groupPosition) {
-			return DataList.Count;
-		}
-
-		public override int GroupCount {
-			get { return 1; } //Don't know what this is...
-		}
-
-
-
-		public override long GetChildId (int groupPosition, int childPosition)
-		{
-			long cool = long.MinValue;
-			return cool;
-			//return childPosition;
 		}
 
 		public override Java.Lang.Object GetGroup (int groupPosition)
 		{
-			throw new NotImplementedException ();
+			return dataHeaders [groupPosition];
 		}
 
 		public override long GetGroupId (int groupPosition)
@@ -93,15 +61,46 @@ namespace TapTapApplication
 			return groupPosition;
 		}
 
+		public override View GetGroupView (int groupPosition, bool isExpanded, View convertView, ViewGroup parent)
+		{
+			View groupView = convertView;
+
+			if (groupView == null) 
+				groupView = context.LayoutInflater.Inflate (Resource.Layout.ExpandableListView, null);
+
+
+			/*if (isExpanded) {
+				group.FindViewById<ImageView> (Resource.Id.arrow).SetImageResource(Resource.Drawable.arrow_up);
+
+			} else {
+				group.FindViewById<ImageView> (Resource.Id.arrow).SetImageResource(Resource.Drawable.arrow_down);
+			}*/
+
+			groupView.FindViewById<TextView> (Resource.Id.txtListHeader).Text = dataHeaders[groupPosition];
+			return groupView;
+		}
+
 		public override bool IsChildSelectable (int groupPosition, int childPosition)
 		{
 			return true;
 		}
 
-		public override bool HasStableIds {
-			get { return true; }
+		public void UpdateData (Dictionary<string, List<string>> data) {
+			this.data = data;
+			this.dataHeaders = data.Keys.ToList ();
+			this.NotifyDataSetChanged ();   
 		}
 
-	}
-}
+		public override int GroupCount {
+			get {
+				return dataHeaders.Count;
+			}
+		}
 
+		public override bool HasStableIds {
+			get {
+				return true; //What is this?
+			}
+		}
+	}
+} 

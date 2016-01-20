@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using System.Net;
+
 using Android.App;
 using Android.Content;
 using Android.OS;
@@ -19,47 +21,32 @@ using TapTap;
 using Android.Support.V4.Widget;
 using Android.Support.V7.App;
 
-
-
-
 using SupportToolbar = Android.Support.V7.Widget.Toolbar;
-
 
 namespace TapTapApplication
 {
 	[Activity (Label = "ActivePastActivity", Theme="@style/MyTheme")]			
 	public class ActivePastActivity : ActionBarActivity
 	{
-
-
-		private MyActionBarDrawerToggle mToggle;
-		private DrawerLayout mDrawerLayout;
-		private SupportToolbar supportToolbar;
-		private LinearLayout mLeftDrawer;
-		public ListView lvControls;
-		public Intent nextActivity;
-
+		SupportToolbar supportToolbar;
+		ListView ordersList;
 		FirebaseClient fbClient;
 		IFirebaseConfig fbConfig;
-		ListView lvOrders;
-		ListAdapter la;
-		List<string> controls;
-		List<Order> orders;
 		string filter;
-		OrderAdapter oa;
+		List<Order> orders;
+
+		//HttpWebRequest webRequest;
 
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
 			SetContentView (Resource.Layout.ActivePast);
 
-			controls = new List<string> ();
-			controls.Add ("ACTIVE ORDERS");
-			controls.Add ("PAST ORDERS");
-			controls.Add ("LOYALTY TRACKING");
-			controls.Add ("LOGOUT");
-
-			la = new ListAdapter (this, controls);
+			supportToolbar = this.FindViewById<SupportToolbar> (Resource.Layout.back_menu);
+			SetSupportActionBar (supportToolbar);
+			SupportActionBar.SetHomeButtonEnabled(true);
+			SupportActionBar.SetDisplayHomeAsUpEnabled (true);
+			SupportActionBar.SetDisplayShowTitleEnabled (true);
 
 			fbConfig = new FirebaseConfig {
 				AuthSecret = "FO85aksCBndB5fXAykNFQstlLqqYrHsiq4myZTQW", 
@@ -69,93 +56,64 @@ namespace TapTapApplication
 			fbClient = new FirebaseClient(fbConfig);
 
 			filter = Intent.GetStringExtra ("Query");
+		}
 
+		protected override void OnStart() {
+			base.OnStart ();
+			filter = Intent.GetStringExtra ("Query");
+			ordersList = this.FindViewById<ListView> (Resource.Id.lvOrders);
 
+			orders = GetOrders(filter, orders);
 
-			mDrawerLayout = this.FindViewById<DrawerLayout> (Resource.Id.drawer_layout);
-			mLeftDrawer = this.FindViewById<LinearLayout> (Resource.Id.left_drawer);
-
-			mToggle = new MyActionBarDrawerToggle (this, mDrawerLayout, Resource.String.openDrawer, 
-				Resource.String.closeDrawer);
-
-
-			mDrawerLayout.SetDrawerListener (mToggle);
-
-			mToggle.SyncState ();
-
-			supportToolbar = FindViewById<SupportToolbar> (Resource.Layout.action_menu);
-
-			SetSupportActionBar (supportToolbar);
-			SupportActionBar.SetHomeButtonEnabled(true);
-			SupportActionBar.SetDisplayHomeAsUpEnabled (true);
-			SupportActionBar.SetDisplayShowTitleEnabled (true);
-
-			lvControls = FindViewById<ListView> (Resource.Id.left_drawer_controls);
-			lvControls.Adapter = la;
-
-			lvControls.ItemClick += LvControls_ItemClick;
-
-			orders = new List<Order> ();
-			orders = GetOrders (filter, orders);
-			lvOrders = this.FindViewById<ListView> (Resource.Id.lvOrders);
-			oa = new OrderAdapter (this, orders);
-			lvOrders.Adapter = oa;
-
-
-
+			ordersList.Adapter = new OrderAdapter (this, orders);
 
 
 		}
 
-		public List<Order> GetOrders(string pastClick, List<Order> orders) {
-			FirebaseResponse response = fbClient.GetAsync ("orders/").Result;
-			string id;
+		public override bool OnCreateOptionsMenu (IMenu menu)
+		{
+			MenuInflater.Inflate (Resource.Layout.back_menu, menu);
+			return base.OnCreateOptionsMenu (menu);
+		}
 
-			JObject jsonResponse = response.ResultAs<JObject> ();
+		public List<Order> GetOrders(string orderType, List<Order> orders) {
+			//Get the user's Facebook User Id
+			//If the app just opens
+			//Get all the orders, set limit of 25 for now (they won't have 1000 orders through)
+			//Get them according to if active orders or past order are called
+			//If the app was already open
+			//Get all the orders
+			//Update the lists accordingly
 
-			Order orderObj = new Order();
-
+			//string facebookId = MainActivity.facebookId;
 			orders = new List<Order> ();
-			int i = 0;
 
-			foreach (JProperty tuple in jsonResponse.Properties()) {
-				//Is it Nishant?
-
-				id = tuple.Value["user_id"].ToString();
-
-				if (id == "facebook:10152966033413443") {
-					//This could get ugly if there's an error
-					if ((filter == "black") && tuple.Value["order_status"].ToString() == filter) {
-						
-						orderObj.Coffee = tuple.Value ["coffee"].ToString(); 
-						orderObj.Size = tuple.Value ["size"].ToString ();
-						orderObj.CafeId = tuple.Value ["cafe_id"].ToString ();
-						orderObj.OrderTime = Convert.ToDateTime(GetDate(tuple.Value ["order_time"].ToString()));
-						orderObj.OrderStatus = tuple.Value ["order_status"].ToString ();
-
-						orders.Add(orderObj);
-
-						orderObj.Cafe = GetCafeName (filter, orders, orderObj.CafeId, i);
-						i++;
-					} else if ((filter != "black") && tuple.Value["order_status"].ToString() != "black") {
-
-						orderObj.Coffee = tuple.Value ["coffee"].ToString(); 
-						orderObj.Size = tuple.Value ["size"].ToString ();
-						orderObj.CafeId = tuple.Value ["cafe_id"].ToString ();
-						orderObj.OrderTime = Convert.ToDateTime(GetDate(tuple.Value ["order_time"].ToString()));
-						orderObj.OrderStatus = tuple.Value ["order_status"].ToString ();
-
-						orders.Add(orderObj);
-
-						orderObj.Cafe = GetCafeName (filter, orders, orderObj.CafeId, i);
-						i++;
-					}
+			FirebaseResponse response = fbClient.Get ("orders", "orderBy=\"user_id\"&equalTo=\"" + "facebook:10152966033413443" + "\"");
+			JObject ordersResponse = response.ResultAs<JObject> ();
 
 
+			foreach (JProperty tuple in ordersResponse.Properties()) {
+				Order order = new Order ();
+				string orderStatus = tuple.Value ["order_status"].ToString ();
+
+				if ((orderType == "black") && (orderStatus == "black")) {
+					order.Coffee = tuple.Value ["coffee"].ToString ();
+					order.Size = tuple.Value ["size"].ToString ();
+					order.CafeId = tuple.Value ["cafe_id"].ToString ();
+					order.OrderTime = Convert.ToDateTime (GetDate (tuple.Value ["order_time"].ToString ()));
+					order.OrderStatus = tuple.Value ["order_status"].ToString ();
+					orders.Add (order);
+				} else if ((orderType == "not") && orderStatus != "black") {
+					order.Coffee = tuple.Value ["coffee"].ToString ();
+					order.Size = tuple.Value ["size"].ToString ();
+					order.CafeId = tuple.Value ["cafe_id"].ToString ();
+					order.OrderTime = Convert.ToDateTime (GetDate (tuple.Value ["order_time"].ToString ()));
+					order.OrderStatus = tuple.Value ["order_status"].ToString ();
+					orders.Add (order);
 				}
+
+
 			}
-
-
 
 			return orders;
 		}
@@ -173,48 +131,18 @@ namespace TapTapApplication
 			return new DateTime (1970, 1, 1, 0, 0, 0).AddSeconds (Convert.ToDouble (unixTime));
 		}
 
-		void LvControls_ItemClick (object sender, AdapterView.ItemClickEventArgs e)
-		{
-			int clickedItem = e.Position;
-
-			switch(clickedItem) {
-			case 0:
-				nextActivity = new Intent (this, typeof(ActivePastActivity));
-				nextActivity.PutExtra ("Query", "black");
-				StartActivity (nextActivity);
-				break;
-			case 1:
-				nextActivity = new Intent (this, typeof(ActivePastActivity));
-				nextActivity.PutExtra ("Query", "not");
-				StartActivity (nextActivity);
-				break;
-			case 2:
-				//Loyalty Tracking
-				break;
-			case 3:
-				//Logout
-				break;
-			}
-		}
-
 		public override bool OnOptionsItemSelected (IMenuItem item) {
 			switch (item.ItemId) {
 			case Android.Resource.Id.Home:
-				if (mDrawerLayout.IsDrawerOpen (mLeftDrawer)) {
-					mDrawerLayout.CloseDrawer (mLeftDrawer);
-				} else {
-					mDrawerLayout.OpenDrawer (mLeftDrawer);
-				}
-				return true;
-			case Resource.Id.order:
-				StartActivity (typeof(OrderActivity));
-				return true;
-			default:
-				return base.OnOptionsItemSelected (item);
+				Intent homeActivity = new Intent (this, typeof(HomeActivity));
+				NavigateUpTo (homeActivity);
+				break;
 			}
+
+			return base.OnOptionsItemSelected (item);
 		}
 
-		protected override void OnSaveInstanceState (Bundle outState)
+		/*protected override void OnSaveInstanceState (Bundle outState)
 		{
 			if (mDrawerLayout.IsDrawerOpen ((int)GravityFlags.Left)) {
 				outState.PutString ("DrawerState", "Opened");
@@ -231,12 +159,6 @@ namespace TapTapApplication
 			mToggle.SyncState ();
 		}
 
-		public override bool OnCreateOptionsMenu (IMenu menu)
-		{
-			MenuInflater.Inflate (Resource.Layout.action_menu, menu);
-			return base.OnCreateOptionsMenu (menu);
-		}
-
 		protected override void OnPostCreate (Bundle savedInstanceState)
 		{
 			base.OnPostCreate (savedInstanceState);
@@ -247,7 +169,7 @@ namespace TapTapApplication
 		{
 			base.OnConfigurationChanged (newConfig);
 			mToggle.OnConfigurationChanged(newConfig);
-		}
+		}*/
 	}
 }
 

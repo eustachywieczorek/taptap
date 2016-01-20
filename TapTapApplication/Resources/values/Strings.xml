@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">TapTap</string>
+	<string name="app_name">TapTapApplication</string>
 	<string name="openDrawer">TapTap</string>
 	<string name="closeDrawer">TapTap</string>
 	<string name="openDrawerPast">Past Orders</string>
 	<string name="closeDrawerPast">Past Orders</string>
+	<string name="facebook_app_id">196495830698802</string>
 </resources>

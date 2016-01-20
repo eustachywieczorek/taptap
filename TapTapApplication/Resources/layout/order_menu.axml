@@ -4,7 +4,8 @@
     <item
         android:title="Order"
         myapp:showAsAction="always"
-        android:orderInCategory="100"
-        android:icon="@drawable/new_order"
-        android:id="@+id/order" />
+        android:orderInCategory="0"
+        android:icon="@drawable/fav"
+        android:id="@+id/fav"
+        android:gravity="right" />
 </menu>

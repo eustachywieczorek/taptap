@@ -24,7 +24,8 @@
         android:focusable="false"
         android:clickable="true"
         android:gravity="center_vertical"
-        android:focusableInTouchMode="false" />
+        android:focusableInTouchMode="false"
+        android:groupIndicator="@null" />
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -65,9 +66,10 @@
             android:gravity="center_vertical" />
     </LinearLayout>
     <Button
-        android:id="@+id/btnLogin"
+        android:id="@+id/btnPay"
         android:layout_width="200dp"
         android:layout_height="40dp"
+        android:layout_marginTop="20dp"
         android:text="Pay Now"
         android:background="@android:color/holo_green_light"
         android:textSize="18dp"

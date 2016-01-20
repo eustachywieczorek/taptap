@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:text="Text"
-    android:textSize="20dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:id="@+id/txtItemContent"
+    android:layout_height="wrap_content"
+    android:id="@+id/coffee_item"
+    android:background="#E0E0E0"
     android:focusable="false"
-    android:focusableInTouchMode="false"
-    android:gravity="center_vertical"
-    android:textColor="#ff757575"
-    android:background="#ffeeeeee"
-    android:paddingLeft="10dp" />
+    android:focusableInTouchMode="false">
+    <TextView
+        android:text="Text"
+        android:textSize="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/txtItemContent"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:gravity="center_vertical"
+        android:textColor="#ff757575"
+        android:background="#ffeeeeee"
+        android:paddingLeft="10dp" />
+</LinearLayout>
