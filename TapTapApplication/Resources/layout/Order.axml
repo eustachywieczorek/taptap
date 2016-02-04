@@ -13,9 +13,9 @@
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
 <!-- Left Navigation Drawer -->
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/frame_action"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/linAction" />
+        android:layout_height="match_parent" />
 </LinearLayout>

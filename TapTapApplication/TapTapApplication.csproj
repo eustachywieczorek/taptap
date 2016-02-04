@@ -66,9 +66,6 @@
     <Reference Include="System.Net.Http.Primitives">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\monoandroid\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\portable-net45+win8+wpa81\Microsoft.Threading.Tasks.dll</HintPath>
     </Reference>
@@ -77,6 +74,15 @@
     </Reference>
     <Reference Include="FireSharp">
       <HintPath>..\packages\FireSharp.1.0.0-CI00007\lib\portable-net45+sl5+wp8+win8\FireSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="nsoftware.InPayPal.Xamarin">
+      <HintPath>..\Components\nsoftware.InPayPal.Indie-5.0.5721\lib\android\nsoftware.InPayPal.Xamarin.dll</HintPath>
+    </Reference>
+    <Reference Include="Stripe">
+      <HintPath>..\Components\stripe-1.0.7\lib\android\Stripe.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -97,13 +103,22 @@
     <Compile Include="Cafe.cs" />
     <Compile Include="BackActivity.cs" />
     <Compile Include="JsonClass.cs" />
+    <Compile Include="WelcomeFragment.cs" />
+    <Compile Include="FavouritesFragment.cs" />
+    <Compile Include="CafeFragment.cs" />
+    <Compile Include="CoffeeFragment.cs" />
+    <Compile Include="FavouritesAdapter.cs" />
+    <Compile Include="TempStorage.cs" />
+    <Compile Include="Favourite.cs" />
+    <Compile Include="NoOrdersFragment.cs" />
+    <Compile Include="ActivePastFragment.cs" />
+    <Compile Include="Coffee.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="packages.config" />
-    <None Include="Resources\layout\LoginFragment.axml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />
@@ -132,10 +147,23 @@
     <AndroidResource Include="Resources\layout\order_menu.axml" />
     <AndroidResource Include="Resources\drawable\go_back.png" />
     <AndroidResource Include="Resources\drawable\back.png" />
-    <AndroidResource Include="Resources\drawable\fav.png" />
     <AndroidResource Include="Resources\layout\list_menu.axml" />
     <AndroidResource Include="Resources\layout\Pay.axml" />
     <AndroidResource Include="Resources\layout\back_menu.axml" />
+    <AndroidResource Include="Resources\layout\WelcomeFragment.axml" />
+    <AndroidResource Include="Resources\layout\FavouritesFragment.axml" />
+    <AndroidResource Include="Resources\layout\FavouritesListItem.axml" />
+    <AndroidResource Include="Resources\drawable\favchecked.png" />
+    <AndroidResource Include="Resources\drawable\fav.png" />
+    <AndroidResource Include="Resources\layout\ActivePastFragment.axml" />
+    <AndroidResource Include="Resources\layout\NoOrdersFragment.axml" />
+    <AndroidResource Include="Resources\drawable\bcoffeeimg.jpg" />
+    <AndroidResource Include="Resources\drawable\coffeeimg.jpg" />
+    <AndroidResource Include="Resources\drawable\darwinslogo.jpg" />
+    <AndroidResource Include="Resources\drawable\pcafelogo.png" />
+    <AndroidResource Include="Resources\drawable\physiollogo.jpg" />
+    <AndroidResource Include="Resources\drawable\shadow.xml" />
+    <AndroidResource Include="Resources\drawable\taptaplogo.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\drawable\" />
@@ -144,4 +172,19 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Insights.1.10.6\build\MonoAndroid10\Xamarin.Insights.targets" Condition="Exists('..\packages\Xamarin.Insights.1.10.6\build\MonoAndroid10\Xamarin.Insights.targets')" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <ItemGroup>
+    <XamarinComponentReference Include="nsoftware.InPayPal.Indie">
+      <Version>5.0.5721</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
+    <XamarinComponentReference Include="stripe">
+      <Version>1.0.7</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
+    <XamarinComponentReference Include="googleplayservices-wallet">
+      <InstallationInProgress>True</InstallationInProgress>
+      <Version>27.0.0.0</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
+  </ItemGroup>
 </Project>

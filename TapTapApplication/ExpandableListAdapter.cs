@@ -14,18 +14,16 @@ namespace TapTapApplication
 	{
 		Activity context;
 		Dictionary<string, List<string>> data;
-		List<string> dataHeaders;
 
-		public ExpandableListAdapter (Activity context, Dictionary<string, List<string>> data, List<string> headers)
+		public ExpandableListAdapter (Activity context, Dictionary<string, List<string>> data)
 		{
 			this.context = context;
 			this.data = data;
-			this.dataHeaders = new List<string> (this.data.Keys);
 		}
 			
 		public override Java.Lang.Object GetChild (int groupPosition, int childPosition)
 		{
-			return data[this.dataHeaders[groupPosition]][childPosition];
+			return null;
 		}
 
 		public override long GetChildId (int groupPosition, int childPosition)
@@ -35,7 +33,8 @@ namespace TapTapApplication
 
 		public override int GetChildrenCount (int groupPosition)
 		{
-			return data [this.dataHeaders [groupPosition]].Count;
+			List<string> keyList = new List<string> (data.Keys);
+			return data [keyList[groupPosition]].Count;
 		}
 
 		public override View GetChildView (int groupPosition, int childPosition, bool isLastChild, View convertView, ViewGroup parent)
@@ -46,14 +45,19 @@ namespace TapTapApplication
 			}
 
 			TextView txtContent = row.FindViewById<TextView> (Resource.Id.txtItemContent);
-			txtContent.Text = data[this.dataHeaders[groupPosition]][childPosition];
+
+			List<string> keyList = new List<string>(data.Keys);
+			List<string> children = data [keyList [groupPosition]];
+
+			txtContent.Text = children [childPosition];
+
 
 			return row;
 		}
 
 		public override Java.Lang.Object GetGroup (int groupPosition)
 		{
-			return dataHeaders [groupPosition];
+			return null;
 		}
 
 		public override long GetGroupId (int groupPosition)
@@ -65,18 +69,13 @@ namespace TapTapApplication
 		{
 			View groupView = convertView;
 
-			if (groupView == null) 
+			if (groupView == null)
 				groupView = context.LayoutInflater.Inflate (Resource.Layout.ExpandableListView, null);
 
+			List<string> keyList = new List<string>(data.Keys);
 
-			/*if (isExpanded) {
-				group.FindViewById<ImageView> (Resource.Id.arrow).SetImageResource(Resource.Drawable.arrow_up);
+			groupView.FindViewById<TextView> (Resource.Id.txtListHeader).Text = keyList[groupPosition];
 
-			} else {
-				group.FindViewById<ImageView> (Resource.Id.arrow).SetImageResource(Resource.Drawable.arrow_down);
-			}*/
-
-			groupView.FindViewById<TextView> (Resource.Id.txtListHeader).Text = dataHeaders[groupPosition];
 			return groupView;
 		}
 
@@ -87,13 +86,12 @@ namespace TapTapApplication
 
 		public void UpdateData (Dictionary<string, List<string>> data) {
 			this.data = data;
-			this.dataHeaders = data.Keys.ToList ();
 			this.NotifyDataSetChanged ();   
 		}
 
 		public override int GroupCount {
 			get {
-				return dataHeaders.Count;
+				return data.Count;
 			}
 		}
 

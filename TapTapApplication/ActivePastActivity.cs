@@ -21,7 +21,11 @@ using TapTap;
 using Android.Support.V4.Widget;
 using Android.Support.V7.App;
 
+using Xamarin.Facebook;
+
 using SupportToolbar = Android.Support.V7.Widget.Toolbar;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace TapTapApplication
 {
@@ -29,13 +33,18 @@ namespace TapTapApplication
 	public class ActivePastActivity : ActionBarActivity
 	{
 		SupportToolbar supportToolbar;
-		ListView ordersList;
+
 		FirebaseClient fbClient;
 		IFirebaseConfig fbConfig;
 		string filter;
-		List<Order> orders;
 
-		//HttpWebRequest webRequest;
+		Android.Support.V7.App.AlertDialog.Builder confirmedDialog;
+
+		FirebaseResponse response;
+
+		JObject ordersJson;
+
+		List<Order> orders;
 
 		protected override void OnCreate (Bundle savedInstanceState)
 		{
@@ -47,27 +56,37 @@ namespace TapTapApplication
 			SupportActionBar.SetHomeButtonEnabled(true);
 			SupportActionBar.SetDisplayHomeAsUpEnabled (true);
 			SupportActionBar.SetDisplayShowTitleEnabled (true);
-
-			fbConfig = new FirebaseConfig {
-				AuthSecret = "FO85aksCBndB5fXAykNFQstlLqqYrHsiq4myZTQW", 
-				BasePath = "https://scorching-heat-9815.firebaseio.com/"
-			};
-
-			fbClient = new FirebaseClient(fbConfig);
+			SupportActionBar.Title = "TapTap Coffee";
 
 			filter = Intent.GetStringExtra ("Query");
+
+
+			confirmedDialog = new Android.Support.V7.App.AlertDialog.Builder (this);
+			confirmedDialog.SetTitle ("Order Received");
+			confirmedDialog.SetMessage ("Your order was received and paid!");
+			confirmedDialog.SetPositiveButton ("Great!", delegate {
+				
+			});
+
+			orders = GetOrders (Intent.GetStringExtra ("Query"));
+
+			if (orders.Count > 0) {
+				//frame layout slow
+				ActivePastFragment activePast = new ActivePastFragment (orders, new OrderAdapter (this, orders));
+				FragmentManager.BeginTransaction ().Replace (Resource.Id.variable_frlayout, activePast).Commit ();
+			} else {
+				//framelayout slow
+				NoOrdersFragment noOrders = new NoOrdersFragment ();
+				FragmentManager.BeginTransaction ().Replace (Resource.Id.variable_frlayout, noOrders).Commit ();
+			}
+
+			if (Intent.GetStringExtra ("Past") == "pay") {
+				confirmedDialog.Show ();
+			}
 		}
 
 		protected override void OnStart() {
 			base.OnStart ();
-			filter = Intent.GetStringExtra ("Query");
-			ordersList = this.FindViewById<ListView> (Resource.Id.lvOrders);
-
-			orders = GetOrders(filter, orders);
-
-			ordersList.Adapter = new OrderAdapter (this, orders);
-
-
 		}
 
 		public override bool OnCreateOptionsMenu (IMenu menu)
@@ -76,59 +95,54 @@ namespace TapTapApplication
 			return base.OnCreateOptionsMenu (menu);
 		}
 
-		public List<Order> GetOrders(string orderType, List<Order> orders) {
-			//Get the user's Facebook User Id
-			//If the app just opens
-			//Get all the orders, set limit of 25 for now (they won't have 1000 orders through)
-			//Get them according to if active orders or past order are called
-			//If the app was already open
-			//Get all the orders
-			//Update the lists accordingly
+		public List<Order> GetOrders(string orderType) {
 
-			//string facebookId = MainActivity.facebookId;
-			orders = new List<Order> ();
+			List<Order> orders = new List<Order>();
+			List<Order> yellows, greens;
 
-			FirebaseResponse response = fbClient.Get ("orders", "orderBy=\"user_id\"&equalTo=\"" + "facebook:10152966033413443" + "\"");
-			JObject ordersResponse = response.ResultAs<JObject> ();
+			if (TempStorage.Orders.Count > 0) {
+				yellows = new List<Order> ();
+				greens = new List<Order> ();
 
-
-			foreach (JProperty tuple in ordersResponse.Properties()) {
-				Order order = new Order ();
-				string orderStatus = tuple.Value ["order_status"].ToString ();
-
-				if ((orderType == "black") && (orderStatus == "black")) {
-					order.Coffee = tuple.Value ["coffee"].ToString ();
-					order.Size = tuple.Value ["size"].ToString ();
-					order.CafeId = tuple.Value ["cafe_id"].ToString ();
-					order.OrderTime = Convert.ToDateTime (GetDate (tuple.Value ["order_time"].ToString ()));
-					order.OrderStatus = tuple.Value ["order_status"].ToString ();
-					orders.Add (order);
-				} else if ((orderType == "not") && orderStatus != "black") {
-					order.Coffee = tuple.Value ["coffee"].ToString ();
-					order.Size = tuple.Value ["size"].ToString ();
-					order.CafeId = tuple.Value ["cafe_id"].ToString ();
-					order.OrderTime = Convert.ToDateTime (GetDate (tuple.Value ["order_time"].ToString ()));
-					order.OrderStatus = tuple.Value ["order_status"].ToString ();
-					orders.Add (order);
+				for (int i = 0; i < TempStorage.Orders.Count; i++) {
+					if (orderType == "black") {
+						if (TempStorage.Orders [i].OrderStatus == orderType) {
+							orders.Add (TempStorage.Orders [i]);
+						}
+					} else if (orderType == "not") {
+						if (TempStorage.Orders [i].OrderStatus == "green") {
+							greens.Add (TempStorage.Orders [i]);
+						} else if (TempStorage.Orders [i].OrderStatus == "yellow") {
+							yellows.Add (TempStorage.Orders [i]);
+						} else if (TempStorage.Orders [i].OrderStatus == "red") {
+							orders.Add (TempStorage.Orders [i]);
+						}
+					}
+				}
+					
+				if (yellows.Count > 0) {
+					orders.InsertRange (0, yellows);
 				}
 
+				if (greens.Count > 0) {
+					orders.InsertRange (0, greens);
+				}
 
+				for (int i = 0; i < orders.Count; i++) {
+					for (int j = 0; j < TempStorage.Cafes.Count; j++) {
+						if (orders[i].CafeId == TempStorage.Cafes[j].CafeId) {
+							orders [i].CafeName = TempStorage.Cafes [j].CafeName;
+						}
+					}
+				}
 			}
 
 			return orders;
 		}
 
-		public string GetCafeName(string pastClick, List<Order> orders, string cafeId, int position) {
-			FirebaseResponse cafeResponse = fbClient.GetAsync("cafes/" + cafeId).Result;
-			JObject jsonResponse = cafeResponse.ResultAs<JObject> ();
-
-			JToken j = jsonResponse.GetValue ("name");
-
-			return j.ToString();
-		}
-
-		public DateTime GetDate(string unixTime) {
-			return new DateTime (1970, 1, 1, 0, 0, 0).AddSeconds (Convert.ToDouble (unixTime));
+		protected override void OnSaveInstanceState (Bundle outState)
+		{
+			
 		}
 
 		public override bool OnOptionsItemSelected (IMenuItem item) {
@@ -142,18 +156,7 @@ namespace TapTapApplication
 			return base.OnOptionsItemSelected (item);
 		}
 
-		/*protected override void OnSaveInstanceState (Bundle outState)
-		{
-			if (mDrawerLayout.IsDrawerOpen ((int)GravityFlags.Left)) {
-				outState.PutString ("DrawerState", "Opened");
-			} else {
-				outState.PutString ("DrawerState", "Closed");
-			}
-
-			base.OnSaveInstanceState (outState);
-		}
-
-		protected override void OnPostResume ()
+		/*protected override void OnPostResume ()
 		{
 			base.OnPostResume ();
 			mToggle.SyncState ();

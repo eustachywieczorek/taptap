@@ -37,26 +37,34 @@ namespace TapTapApplication
 
 			LinearLayout lin = view.FindViewById<LinearLayout> (Resource.Id.list_item);
 			LinearLayout colour = view.FindViewById<LinearLayout> (Resource.Id.order_colour);
-
-			if (items [position].OrderStatus == "red") {
-				colour.SetBackgroundColor (Android.Graphics.Color.Red);
-			} else if (items [position].OrderStatus == "yellow") {
-				colour.SetBackgroundColor (Android.Graphics.Color.Yellow);
-			} else if (items [position].OrderStatus == "green") {
-				colour.SetBackgroundColor (Android.Graphics.Color.Green);
-			} else if (items [position].OrderStatus == "black") {
-				colour.SetBackgroundColor (Android.Graphics.Color.ParseColor ("#FFFFFF"));
-			}
-
 			TextView coffee, cafe, orderDate;
 
 			coffee = lin.FindViewById<TextView> (Resource.Id.txtItemCoffee);
 			cafe = lin.FindViewById<TextView> (Resource.Id.txtItemCafe);
 			orderDate = lin.FindViewById<TextView> (Resource.Id.txtItemOrder);
 
-			coffee.Text = string.Concat(items [position].Coffee, " - ", items[position].Size);
-			cafe.Text = items [position].Cafe;
-			orderDate.Text = items [position].OrderTime.ToLongDateString();
+
+			if (items [position].OrderStatus != "black") {
+				if (items [position].OrderStatus == "red") {
+					colour.SetBackgroundColor (Android.Graphics.Color.Red);
+					orderDate.Text = string.Concat("Expected delivery time: ", items[position].OrderTime.AddMinutes(TempStorage.GetPrepTime (items [position].CafeId)).ToShortTimeString());
+				} else if (items [position].OrderStatus == "yellow") {
+					colour.SetBackgroundColor (Android.Graphics.Color.Yellow);
+					orderDate.Text = string.Concat("Expected delivery time: ", items[position].OrderTime.AddMinutes(TempStorage.GetPrepTime (items [position].CafeId)).ToShortTimeString());
+				} else if (items [position].OrderStatus == "green") {
+					colour.SetBackgroundColor (Android.Graphics.Color.Green);
+					orderDate.Text = string.Concat("Expected delivery time: ", items[position].OrderTime.AddMinutes(TempStorage.GetPrepTime (items [position].CafeId)).ToShortTimeString());
+				}
+			} else {
+				colour.SetBackgroundColor (Android.Graphics.Color.ParseColor ("#FFFFFF"));
+				orderDate.Text = items [position].OrderTime.ToString ("F");
+			}
+
+
+
+			coffee.Text = string.Concat(items[position].Size, " ", items [position].Coffee, " ($", items[position].Price , ")");
+			cafe.Text = items [position].CafeName;
+
 
 
 			return view;

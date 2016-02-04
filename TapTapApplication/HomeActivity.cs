@@ -14,8 +14,18 @@ using SupportToolbar = Android.Support.V7.Widget.Toolbar;
 using Android.Support.V7.App;
 using TapTap;
 
+using FireSharp;
+using FireSharp.Response;
+using FireSharp.Exceptions;
+using Newtonsoft.Json;
+
 using Xamarin.Facebook;
 using Xamarin.Facebook.Login;
+using Newtonsoft.Json.Linq;
+
+using FireSharp.Config;
+using System.Threading.Tasks;
+using Android.Net;
 
 namespace TapTapApplication
 {
@@ -29,6 +39,14 @@ namespace TapTapApplication
 		ListView lvControls;
 		List<string> controls;
 		Intent nextActivity;
+		FirebaseClient fbClient;
+		FrameLayout changingFragment;
+		List<Order> orders;
+		IFirebaseConfig fbConfig;
+
+
+		FirebaseResponse favourites;
+		JObject favouritesJson;
 
 		protected override void OnCreate (Bundle bundle)
 		{
@@ -39,18 +57,57 @@ namespace TapTapApplication
 			SetSupportActionBar (supportToolbar);
 			SupportActionBar.SetHomeButtonEnabled(true);
 			SupportActionBar.SetDisplayHomeAsUpEnabled (true);
+			SupportActionBar.SetDisplayShowTitleEnabled (true);
+			SupportActionBar.Title = "TapTap Coffee";
 
 			controls = GetDrawerOptions ();
+			changingFragment = FindViewById<FrameLayout> (Resource.Id.variable_frlayout);
+		}
+
+		protected override void OnStart() {
+			base.OnStart ();
+
+			/*if (TempStorage.Favourites == null) {
+				//TempStorage.Favourites = new List<Favourite> ();
+
+				//favourites = await fbClient.GetAsync ("users/facebook:" + Profile.CurrentProfile.Id + "/favourites");
+				//favouritesJson = favourites.ResultAs<JObject> ();
+			} else {
+				for (int i = 0; i < TempStorage.Favourites.Count; i++) {
+					TempStorage.Favourites.Add (new Favourite 
+						{ 
+							Coffee = favourite.Value ["coffee"].ToString (), 
+							CafeId = favourite.Value["cafe_id"].ToString(),
+							Price = favourite.Value ["price"].ToString (), 
+							Size = favourite.Value ["size"].ToString ()//, 
+							//Milk = favourite.Value["milk"].ToString()
+						});
+				}
+			}*/
+
+			//Serving as a method of checking changes -> favouritesJson = TempStorage.FavouritesJson;
+			//I believe Firsharp already has some of this functionality.
+		}
+
+		protected override void OnResumeFragments ()
+		{
+			base.OnResumeFragments ();
+
+			if (TempStorage.Favourites.Count == 0) {
+				WelcomeFragment welcomeFragment = new WelcomeFragment ();
+				FragmentManager.BeginTransaction ().Replace (Resource.Id.variable_frlayout, welcomeFragment).Commit ();
+			} else {
+				FavouritesFragment favouritesFragment = new FavouritesFragment (TempStorage.Favourites, new FavouritesAdapter(this, TempStorage.Favourites));
+				//Some silly bug happens here...
+				FragmentManager.BeginTransaction ().Replace (Resource.Id.variable_frlayout, favouritesFragment).Commit ();
+			}
+		}
+
+		public void AssessNetwork() {
 		}
 
 		public List<string> GetDrawerOptions() {
-			List<string> controlsTemp = new List<string> ();
-			controlsTemp.Add ("ACTIVE ORDERS");
-			controlsTemp.Add ("PAST ORDERS");
-			controlsTemp.Add ("LOYALTY TRACKING");
-			controlsTemp.Add ("LOGOUT");
-
-			return controlsTemp;
+			return new List<string> { "ACTIVE ORDERS", "PAST ORDERS", "LOGOUT" };
 		}
 
 		public override bool OnCreateOptionsMenu (IMenu menu)
@@ -73,6 +130,8 @@ namespace TapTapApplication
 		public void LvControls_ItemClick (object sender, AdapterView.ItemClickEventArgs e)
 		{
 			switch (e.Position) {
+			//Cases 0-2: Active Orders, Past Orders, Logout
+			//Loyalty tracking will come soon
 			case 0:
 				nextActivity = new Intent (this, typeof(ActivePastActivity));
 				nextActivity.PutExtra ("Query", "not");
@@ -83,8 +142,7 @@ namespace TapTapApplication
 				nextActivity.PutExtra ("Query", "black");
 				StartActivity (nextActivity);
 				break;
-
-			case 3:
+			case 2:
 				LoginManager.Instance.LogOut ();
 				nextActivity = new Intent (this, typeof(MainActivity));
 				StartActivity (nextActivity);

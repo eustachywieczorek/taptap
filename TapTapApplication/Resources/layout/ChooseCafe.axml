@@ -5,5 +5,8 @@
     android:layout_height="match_parent"
     android:layout_gravity="start"
     android:choiceMode="singleChoice"
-    android:background="#757575"
-    android:orientation="vertical" />
+    android:background="#F5F5F5"
+    android:orientation="vertical"
+    android:divider="@null"
+    android:dividerHeight="0dp"
+    android:paddingTop="10dp" />
