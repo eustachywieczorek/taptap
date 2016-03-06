@@ -5,28 +5,50 @@
     android:layout_height="match_parent"
     android:weightSum="100">
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="15" />
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="80"
+        android:layout_weight="50"
         android:gravity="center">
         <ImageView
             android:src="@drawable/logo"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
             android:id="@+id/imageView1" />
     </LinearLayout>
-    <ProgressBar
-        android:id="@+id/pbLoading"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="20" />
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
-    <Button
-        android:id="@+id/login_button"
-        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:gravity="center_horizontal">
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="80"
+            android:layout_marginBottom="5dp"
+            android:text="Login" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
-        android:text="Login via Facebook"
-        android:layout_gravity="center_horizontal" />
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:gravity="center_horizontal">
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="80"
+            android:text="Signup" />
+    </LinearLayout>
 </LinearLayout>

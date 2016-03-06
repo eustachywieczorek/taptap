@@ -12,23 +12,34 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 
+using Android.Gms.Common;
+using Android.Gms.Common.Apis;
+using Android.Gms.Wallet.FirstParty;
+using Android.Gms.Wallet.Fragment;
+using Android.Gms.Wallet.Wobs;
+using Android.Gms.Wallet;
+using Android.Runtime;
+
 namespace TapTapApplication
 {
 	public class BillingFragment : Fragment
 	{
+		Stripe.StripeView stripeView;
+		Button btnPay;
+		const int LOAD_MASKED_WALLET_REQ_CODE = 1000;
+
 		public override void OnCreate (Bundle savedInstanceState)
 		{
 			base.OnCreate (savedInstanceState);
-
-			// Create your fragment here
 		}
 
 		public override View OnCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 		{
-			// Use this to return your custom view for this Fragment
-			// return inflater.Inflate(Resource.Layout.YourFragment, container, false);
+			View v = inflater.Inflate (Resource.Layout.BillingFragment, null);
 
-			return base.OnCreateView (inflater, container, savedInstanceState);
+
+
+			return v;
 		}
 	}
 }

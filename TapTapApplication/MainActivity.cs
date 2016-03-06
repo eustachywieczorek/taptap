@@ -99,9 +99,9 @@ namespace TapTapApplication
 		}
 
 		private void SetupUi() {
-			loginButton = FindViewById<Button> (Resource.Id.login_button);
+			loginButton = FindViewById<Button> (Resource.Id.btnLogin);
 			alertDialog = new AlertDialog.Builder (this);
-			loadingBar = FindViewById<ProgressBar> (Resource.Id.pbLoading);
+			//loadingBar = FindViewById<ProgressBar> (Resource.Id.pbLoading);
 			loadingBar.Visibility = Android.Views.ViewStates.Invisible;
 
 			loginButton.Click += LoginButton_Click;
@@ -174,6 +174,17 @@ namespace TapTapApplication
 				}
 			} catch (FirebaseException e) {
 				//NB Harness the exception somehow, maybe try to get the user profile data somewhow
+			}
+		}
+
+		public bool IsNewUser() {
+			string facebookId = string.Concat ("facebook:", Profile.CurrentProfile.Id);
+			FirebaseResponse fbResponse = TempStorage.FbClient.Get ("users/" + facebookId + "newUser/");
+
+			JObject json = fbResponse.ResultAs<JObject> ();
+
+			if (json != null && json.Property ("newUser").Value == true) {
+				StartActivity (typeof(PayActivity));
 			}
 		}
 
